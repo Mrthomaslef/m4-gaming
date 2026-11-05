@@ -747,7 +747,8 @@
     const FILTER_GROUPS = [
       { id: 'all', label: '📚 Tous les Jeux', match: () => true },
       { id: 'fav', label: '🔥 Favoris', match: g => g.featured },
-      { id: 'native', label: '⛵ Recomp & PC', match: g => g.system === 'native' },
+      { id: 'recomp', label: '⛵ Recomp', match: g => g.system === 'recomp' },
+      { id: 'pc', label: '💻 Jeux PC', match: g => g.system === 'pc' },
       { id: 'switch', label: '🔴 Switch', match: g => g.system === 'switch' },
       { id: 'wiiu', label: '🟦 Wii U', match: g => g.system === 'wiiu' },
       { id: 'wii', label: '🎾 Wii', match: g => g.system === 'wii' },
