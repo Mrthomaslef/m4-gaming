@@ -776,19 +776,35 @@
     let API_BASE = "";
     let IS_STATIC_HOST = false;
 
+    let LAN_FALLBACK_URL = "http://192.168.1.152:8765";
+
     async function detectApiBase() {
       if (location.port === "8765" || location.port === "8768") {
         API_BASE = "";
         return;
       }
-      const candidates = ["http://127.0.0.1:8768", "http://192.168.1.152:8765", "http://192.168.1.152:8768"];
+      const candidates = [];
+      try {
+        const r = await fetch("./endpoint.json?t=" + Date.now(), { cache: "no-store" });
+        if (r.ok) {
+          const ep = await r.json();
+          if (ep.lanUrl) LAN_FALLBACK_URL = ep.lanUrl;
+          if (ep.tunnelUrl) candidates.push(ep.tunnelUrl);
+          if (location.protocol === "http:" && ep.lanUrl) candidates.push(ep.lanUrl);
+        }
+      } catch (e) {}
+      if (location.protocol === "http:") {
+        candidates.push("http://127.0.0.1:8768", "http://192.168.1.152:8765", "http://192.168.1.152:8768");
+      } else {
+        candidates.push("http://127.0.0.1:8768");
+      }
       for (const c of candidates) {
         try {
           const ctrl = new AbortController();
-          const t = setTimeout(() => ctrl.abort(), 1200);
+          const t = setTimeout(() => ctrl.abort(), 2200);
           const r = await fetch(c + "/status", { cache: "no-store", signal: ctrl.signal });
           clearTimeout(t);
-          if (r.ok) { API_BASE = c; return; }
+          if (r.ok) { API_BASE = c; IS_STATIC_HOST = false; return; }
         } catch (e) {}
       }
       IS_STATIC_HOST = true;
@@ -809,7 +825,7 @@
       if (btn) btn.classList.add('pending');
       const slow = setTimeout(() => showToast('Envoi au Mac mini M4...'), 250);
       if (IS_STATIC_HOST) {
-        window.location.href = "http://192.168.1.152:8765/?action=" + encodeURIComponent(path);
+        window.location.href = LAN_FALLBACK_URL + "/?action=" + encodeURIComponent(path);
         return;
       }
       try {
@@ -827,7 +843,7 @@
 
     async function launchGame(gameId, gameName) {
       if (IS_STATIC_HOST) {
-        window.location.href = "http://192.168.1.152:8765/?launch=" + encodeURIComponent(gameId);
+        window.location.href = LAN_FALLBACK_URL + "/?launch=" + encodeURIComponent(gameId);
         return;
       }
       ACTIVE_GAME_ID = gameId;
