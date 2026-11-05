@@ -1,7 +1,18 @@
 {
   "status": "ok",
-  "count": 82,
+  "count": 83,
   "games": [
+    {
+      "id": "botw_recomp",
+      "name": "Zelda: Breath of the Wild (Recomp Natif M4 4K)",
+      "system": "recomp",
+      "systemLabel": "Recomp Natif M4",
+      "badge": "RECOMP M4",
+      "color": "#10b981",
+      "coverUrl": "/cover/botw_recomp",
+      "featured": true,
+      "staticCover": "covers/botw_recomp.jpg"
+    },
     {
       "id": "wwhd_recomp",
       "name": "Zelda: The Wind Waker HD (Recomp Natif M4)",
