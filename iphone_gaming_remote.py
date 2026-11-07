@@ -1611,7 +1611,7 @@ MEDIA_ROOT = "/Users/thomaslefevre/ES-DE/downloaded_media"
 SCRIPTS_DIR = "/Users/thomaslefevre/ES-DE/scripts"
 
 SYSTEM_DEFS = [
-    ("switch", "Nintendo Switch", "SWITCH", "#ef4444", "Switch", [".nsp", ".xci"], lambda rom: [f"{SCRIPTS_DIR}/ryujinx_launch.sh", rom]),
+    ("switch", "Nintendo Switch", "SWITCH", "#ef4444", "Switch", [".nsp", ".xci", ".nup"], lambda rom: [f"{SCRIPTS_DIR}/lichii_launch.sh" if rom.lower().endswith(".nup") else f"{SCRIPTS_DIR}/ryujinx_launch.sh", rom]),  # .nup = Switch 2 -> Lichii
     ("wiiu", "Nintendo Wii U", "WII U", "#0ea5e9", "WiiU", [".wua", ".wud", ".wux", ".rpx"], lambda rom: [f"{SCRIPTS_DIR}/cemu_launch.sh", rom]),
     ("wii", "Nintendo Wii", "WII", "#38bdf8", "Wii", [".rvz", ".iso", ".wbfs"], lambda rom: [f"{SCRIPTS_DIR}/dolphin_launch.sh", rom]),
     ("gc", "Nintendo GameCube", "GAMECUBE", "#8b5cf6", "GameCube", [".rvz", ".iso", ".gcm"], lambda rom: [f"{SCRIPTS_DIR}/dolphin_launch.sh", rom]),
