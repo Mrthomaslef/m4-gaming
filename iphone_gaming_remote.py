@@ -54,6 +54,7 @@ CROSSOVER_BOTTLE = "/Users/thomaslefevre/Library/Application Support/CrossOver/B
 EMULATOR_PROCESSES = [
     "RetroArch",
     "Ryujinx", "ryujinx_shader_hud", "wine_fps_hud",
+    "eden-cli", "lichii",
     "Dolphin",
     "PCSX2-v2.8.2",
     "PCSX2",
@@ -1400,6 +1401,7 @@ def get_active_status():
     for proc, label in [
         (r"Breath of the Wild\.app/Contents/MacOS/", "🌿 Breath of the Wild (Recomp)"),
         ("wwhd", "⛵ Wind Waker HD (Recomp)"),
+        ("eden-cli", "🎮 Jeu Switch 2 (Lichii)"),
         ("Ryujinx", "Jeu Switch"),
         ("Dolphin", "Jeu GC/Wii"),
         ("PCSX2-v2.8.2", "Jeu PS2"),
