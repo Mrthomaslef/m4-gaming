@@ -54,7 +54,7 @@ CROSSOVER_BOTTLE = "/Users/thomaslefevre/Library/Application Support/CrossOver/B
 EMULATOR_PROCESSES = [
     "RetroArch",
     "Ryujinx", "ryujinx_shader_hud", "wine_fps_hud",
-    "eden-cli", "lichii",
+    "eden-cli", "lichii", "dmhost",
     "Dolphin",
     "PCSX2-v2.8.2",
     "PCSX2",
@@ -1401,6 +1401,7 @@ def get_active_status():
     for proc, label in [
         (r"Breath of the Wild\.app/Contents/MacOS/", "🌿 Breath of the Wild (Recomp)"),
         ("wwhd", "⛵ Wind Waker HD (Recomp)"),
+        ("Ocarina of Time.app/Contents/MacOS/dmhost", "🗡️ Zelda Ocarina of Time (Natif M4)"),
         ("eden-cli", "🎮 Jeu Switch 2 (Lichii)"),
         ("Ryujinx", "Jeu Switch"),
         ("Dolphin", "Jeu GC/Wii"),
@@ -1611,7 +1612,7 @@ MEDIA_ROOT = "/Users/thomaslefevre/ES-DE/downloaded_media"
 SCRIPTS_DIR = "/Users/thomaslefevre/ES-DE/scripts"
 
 SYSTEM_DEFS = [
-    ("switch", "Nintendo Switch", "SWITCH", "#ef4444", "Switch", [".nsp", ".xci", ".nup"], lambda rom: [f"{SCRIPTS_DIR}/lichii_launch.sh" if rom.lower().endswith(".nup") else f"{SCRIPTS_DIR}/ryujinx_launch.sh", rom]),  # .nup = Switch 2 -> Lichii
+    ("switch", "Nintendo Switch", "SWITCH", "#ef4444", "Switch", [".nsp", ".xci", ".nup"], lambda rom: ([f"{SCRIPTS_DIR}/oot_native_launch.sh"] if "04004860224DEC000" in rom else [f"{SCRIPTS_DIR}/lichii_launch.sh" if rom.lower().endswith(".nup") else f"{SCRIPTS_DIR}/ryujinx_launch.sh", rom])),  # .nup = Switch 2 -> Lichii
     ("wiiu", "Nintendo Wii U", "WII U", "#0ea5e9", "WiiU", [".wua", ".wud", ".wux", ".rpx"], lambda rom: [f"{SCRIPTS_DIR}/cemu_launch.sh", rom]),
     ("wii", "Nintendo Wii", "WII", "#38bdf8", "Wii", [".rvz", ".iso", ".wbfs"], lambda rom: [f"{SCRIPTS_DIR}/dolphin_launch.sh", rom]),
     ("gc", "Nintendo GameCube", "GAMECUBE", "#8b5cf6", "GameCube", [".rvz", ".iso", ".gcm"], lambda rom: [f"{SCRIPTS_DIR}/dolphin_launch.sh", rom]),
