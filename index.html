@@ -811,12 +811,30 @@
       IS_STATIC_HOST = true;
     }
 
+    // 🔒 Code d'association : obligatoire pour piloter le Mac depuis Internet (tunnel).
+    const M4KEY_LS = "m4gaming_key";
+    (function () {
+      const m = location.hash.match(/key=([A-Za-z0-9-]+)/);
+      if (m) { localStorage.setItem(M4KEY_LS, m[1]); history.replaceState(null, "", location.pathname + location.search); }
+    })();
+    function withKey(url) {
+      const k = localStorage.getItem(M4KEY_LS);
+      if (!k || url.startsWith("./")) return url;
+      return url + (url.includes("?") ? "&" : "?") + "k=" + encodeURIComponent(k);
+    }
     function fetchJSON(path, ms) {
       const ctrl = new AbortController();
       const timer = setTimeout(() => ctrl.abort(), ms);
       const url = path.startsWith("http") || path.startsWith("./") ? path : (API_BASE + path);
-      return fetch(url, { cache: 'no-store', signal: ctrl.signal })
-        .then(r => r.json())
+      const go = () => fetch(withKey(url), { cache: 'no-store', signal: ctrl.signal });
+      return go()
+        .then(r => {
+          if (r.status !== 401) return r.json();
+          const k = prompt("🔒 Code d'association du Mac mini M4\n(affiché sur http://192.168.1.152:8765/pair depuis le Wi-Fi maison)");
+          if (!k) throw new Error("locked");
+          localStorage.setItem(M4KEY_LS, k.trim().toUpperCase());
+          return go().then(r2 => { if (r2.status === 401) { localStorage.removeItem(M4KEY_LS); throw new Error("locked"); } return r2.json(); });
+        })
         .finally(() => clearTimeout(timer));
     }
 
@@ -833,7 +851,7 @@
         const d = await fetchJSON(path, 45000);
         showToast(d.message || 'OK');
       } catch (e) {
-        showToast(e.name === 'AbortError' ? 'Le Mac ne répond pas' : 'Erreur de connexion');
+        showToast(e.message === 'locked' ? '🔒 iPhone non associé au Mac' : (e.name === 'AbortError' ? 'Le Mac ne répond pas' : 'Erreur de connexion'));
       } finally {
         clearTimeout(slow);
         if (btn) btn.classList.remove('pending');
